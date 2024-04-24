@@ -1,0 +1,52 @@
+server:
+  port: 8080
+
+#Develop
+frontDomain: "http://localhost:3000"
+dbDomain: "mysql://localhost:3306"
+dbUser: "root"
+dbPasswd: "1234"
+itemImgLocation: C:/shop/item
+uploadPath: file:///shop/
+
+#Deploy
+#frontDomain: "http://13.125.249.166"
+#dbDomain: "mysql://15.164.231.36:3306"
+#dbUser: "shop"
+#dbPasswd: "1234"
+#itemImgLocation: /home/ec2-user/shop/item
+#uploadPath: file:///home/ec2-user/shop/
+
+spring:
+  datasource:
+    url: jdbc:${dbDomain}/shop?useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul
+    username: ${dbUser}
+    password: ${dbPasswd}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+        default_batch_fetch_size: 100
+
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 100MB
+      enabled: true
+
+jwt:
+  isuuer: reactdemo
+  secret-key: jwtSecretKey
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
