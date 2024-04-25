@@ -4,6 +4,7 @@ server:
 #Develop
 frontDomain: "http://localhost:3000"
 dbDomain: "mysql://localhost:3306"
+dbName: "shop"
 dbUser: "root"
 dbPasswd: "1234"
 itemImgLocation: C:/shop/item
@@ -19,13 +20,13 @@ uploadPath: file:///shop/
 
 spring:
   datasource:
-    url: jdbc:${dbDomain}/shop?useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul
+    url: jdbc:${dbDomain}/${dbName}?useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul
     username: ${dbUser}
     password: ${dbPasswd}
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
         format_sql: true
