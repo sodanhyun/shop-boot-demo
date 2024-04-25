@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +23,7 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@Valid UserFormDto dto,
+    public ResponseEntity<String> signup(@Valid @RequestBody UserFormDto dto,
                                          BindingResult bindingResult) {
         if(bindingResult.hasErrors()) return ValidUtil.getStringResponseEntity(bindingResult);
         try{
@@ -34,7 +35,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid LoginDto dto) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginDto dto) {
         try {
             return new ResponseEntity<>(userService.login(dto), HttpStatus.OK);
         }catch(Exception e) {
