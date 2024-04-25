@@ -24,7 +24,7 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@Valid UserFormDto dto,
                                          BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) ValidUtil.getStringResponseEntity(bindingResult);
+        if(bindingResult.hasErrors()) return ValidUtil.getStringResponseEntity(bindingResult);
         try{
             userService.signUp(dto);
             return new ResponseEntity<>("회원가입이 완료되었습니다", HttpStatus.CREATED);

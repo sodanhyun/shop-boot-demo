@@ -26,7 +26,7 @@ public class OrderController {
     public ResponseEntity<String> order(@RequestBody @Valid OrderDto orderDto,
                                         BindingResult bindingResult,
                                         Principal principal){
-        if(bindingResult.hasErrors()) ValidUtil.getStringResponseEntity(bindingResult);
+        if(bindingResult.hasErrors()) return ValidUtil.getStringResponseEntity(bindingResult);
         try {
             orderService.order(orderDto, principal.getName());
         } catch(Exception e){

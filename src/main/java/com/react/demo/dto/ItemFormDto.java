@@ -2,6 +2,7 @@ package com.react.demo.dto;
 
 import com.react.demo.constant.ItemSellStatus;
 import com.react.demo.entity.Item;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -22,12 +23,14 @@ public class ItemFormDto {
     private String itemNm;
 
     @NotNull(message = "가격은 필수 입력 값입니다.")
+    @Min(value = 0, message = "가격은 최소 0원 이상이어야 합니다.")
     private Integer price;
 
     @NotBlank(message = "상품 상세는 필수 입력 값입니다.")
     private String itemDetail;
 
     @NotNull(message = "재고는 필수 입력 값입니다.")
+    @Min(value = 0, message = "재고 수량은 최소 0개 이상이어야 합니다.")
     private Integer stockNumber;
 
     private ItemSellStatus itemSellStatus;

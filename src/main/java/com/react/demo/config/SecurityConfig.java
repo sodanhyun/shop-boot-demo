@@ -56,10 +56,10 @@ public class SecurityConfig {
                         new JwtFilter(tokenProvider),
                         UsernamePasswordAuthenticationFilter.class
                 )
-                .exceptionHandling( exceptionHandler -> exceptionHandler
-                        .accessDeniedHandler(jwtAccessDeniedHandler)
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                )
+//                .exceptionHandling( exceptionHandler -> exceptionHandler
+//                        .accessDeniedHandler(jwtAccessDeniedHandler)
+//                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+//                )
                 .authorizeHttpRequests(request -> {
                     request
                             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()

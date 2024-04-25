@@ -33,7 +33,7 @@ public class ItemController {
                                           @RequestPart(value = "itemImgFile", required = false)
                                               List<MultipartFile> itemImgFileList){
         if(bindingResult.hasErrors()) return getStringResponseEntity(bindingResult);
-        if(itemImgFileList.get(0).isEmpty() && itemFormDto.getId() == null){
+        if(itemImgFileList==null || itemImgFileList.get(0).isEmpty()){
             return new ResponseEntity<>("첫번째 상품 이미지는 필수 입력 값 입니다.", HttpStatus.BAD_REQUEST);
         }
         try {
@@ -44,12 +44,12 @@ public class ItemController {
         return ResponseEntity.ok("상품이 정상적으로 등록되었습니다.");
     }
 
-    @PostMapping(value = "/admin/item")
+    @PatchMapping(value = "/admin/item")
     public ResponseEntity<String> itemUpdate(@Valid @RequestPart("data") ItemFormDto itemFormDto,
                                              BindingResult bindingResult,
                                              @RequestPart(value = "itemImgFile", required = false)
                                                  List<MultipartFile> itemImgFileList){
-        if(bindingResult.hasErrors()) ValidUtil.getStringResponseEntity(bindingResult);
+        if(bindingResult.hasErrors()) return ValidUtil.getStringResponseEntity(bindingResult);
         try {
             itemService.updateItem(itemFormDto, itemImgFileList);
         } catch (Exception e){

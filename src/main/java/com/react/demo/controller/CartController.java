@@ -23,7 +23,7 @@ public class CartController {
     public ResponseEntity<String> order(@RequestBody @Valid CartItemDto cartItemDto,
                                         BindingResult bindingResult,
                                         Principal principal){
-        if(bindingResult.hasErrors()) ValidUtil.getStringResponseEntity(bindingResult);
+        if(bindingResult.hasErrors()) return ValidUtil.getStringResponseEntity(bindingResult);
         try {
             cartService.addCart(cartItemDto, principal.getName());
         } catch(Exception e){
