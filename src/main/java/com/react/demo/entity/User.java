@@ -3,7 +3,9 @@ package com.react.demo.entity;
 import com.react.demo.constant.Role;
 import com.react.demo.dto.UserFormDto;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,15 +19,18 @@ import java.util.Collection;
 @Table(name="users")
 @Getter
 @Setter
+@NoArgsConstructor
 public class User implements UserDetails {
 
     @Id
     @Column(name="user_id")
     private String id;
 
+    @Column(unique = true)
+    private String nickname;
+
     private String name;
 
-    @Column(nullable = false)
     private String password;
 
     private String address;
@@ -33,6 +38,19 @@ public class User implements UserDetails {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Builder
+    public User(String id, String password, String nickname, Role role) {
+        this.id = id;
+        this.password = password;
+        this.nickname = nickname;
+        this.role = role;
+    }
+
+    public User update(String nickname) {
+        this.nickname = nickname;
+        return this;
+    }
 
     public static User createUser(UserFormDto dto, PasswordEncoder passwordEncoder) {
         User user = new User();

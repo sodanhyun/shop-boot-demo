@@ -1,4 +1,4 @@
-package com.react.demo.controller;
+package com.react.demo.util;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ValidUtil {
 
-    static ResponseEntity<String> getStringResponseEntity(BindingResult bindingResult) {
+    public static ResponseEntity<String> getStringResponseEntity(BindingResult bindingResult) {
         StringBuilder sb = new StringBuilder();
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
 

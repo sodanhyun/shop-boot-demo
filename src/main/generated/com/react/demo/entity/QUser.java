@@ -25,6 +25,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath name = createString("name");
 
+    public final StringPath nickname = createString("nickname");
+
     public final StringPath password = createString("password");
 
     public final EnumPath<com.react.demo.constant.Role> role = createEnum("role", com.react.demo.constant.Role.class);

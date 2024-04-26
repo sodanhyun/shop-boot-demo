@@ -5,6 +5,7 @@ import com.react.demo.dto.ItemSearchDto;
 import com.react.demo.dto.PageDto;
 import com.react.demo.entity.Item;
 import com.react.demo.service.ItemService;
+import com.react.demo.util.ValidUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Optional;
 
-import static com.react.demo.controller.ValidUtil.getStringResponseEntity;
+import static com.react.demo.util.ValidUtil.getStringResponseEntity;
 
 @RestController
 @RequiredArgsConstructor

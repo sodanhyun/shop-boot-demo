@@ -1,4 +1,4 @@
-package com.react.demo.jwt;
+package com.react.demo.config.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

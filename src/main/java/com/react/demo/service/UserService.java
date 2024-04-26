@@ -1,26 +1,33 @@
 package com.react.demo.service;
 
 import com.react.demo.dto.LoginDto;
-import com.react.demo.dto.TokenRequest;
 import com.react.demo.dto.TokenResponse;
 import com.react.demo.dto.UserFormDto;
-import com.react.demo.entity.RefreshToken;
 import com.react.demo.entity.User;
-import com.react.demo.jwt.TokenProvider;
+import com.react.demo.config.jwt.TokenProvider;
 import com.react.demo.repository.UserRepository;
+import com.react.demo.util.CookieUtil;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.WebUtils;
 
 import java.time.Duration;
+
+import static com.react.demo.constant.TokenConstant.*;
 
 @Service
 @Transactional
@@ -28,10 +35,10 @@ import java.time.Duration;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public boolean validateUser(UserFormDto dto) {
         return userRepository.findById(dto.getId()).orElse(null) == null;
@@ -43,45 +50,46 @@ public class UserService implements UserDetailsService {
         userRepository.save(saveUser);
     }
 
-    public TokenResponse login(LoginDto dto) {
+    public TokenResponse login(LoginDto dto, HttpServletRequest request, HttpServletResponse response) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(dto.getId(), dto.getPassword());
         Authentication authentication =
                 authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         User user = userRepository.findById(authentication.getName())
                 .orElseThrow(EntityNotFoundException::new);
-        String newRefreshToken = tokenProvider.createRefreshToken(Duration.ofDays(1));
-        RefreshToken existRefreshToken = refreshTokenService.findByUser(user);
-        if(existRefreshToken == null) {
-            refreshTokenService.saveToken(new RefreshToken(user, newRefreshToken));
-        }else {
-            existRefreshToken.update(newRefreshToken);
-        }
+
+        String refreshToken = refreshTokenService.createNewToken(user);
+        addRefreshTokenToCookie(request, response, refreshToken);
         String accessToken = tokenProvider.createAccessToken(user, Duration.ofHours(2));
 
-        return new TokenResponse(accessToken, newRefreshToken, user.getRole().getKey());
+        return new TokenResponse(accessToken, user.getRole().getKey());
     }
 
-    public void logout(TokenRequest request) {
-        refreshTokenService.removeToken(request.getRefreshToken());
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+        Cookie refreshTokenCookie = WebUtils.getCookie(request, REFRESH_TOKEN_COOKIE_NAME);
+        if(refreshTokenCookie==null) return;
+        String refreshToken = refreshTokenCookie.getValue();
+        refreshTokenService.removeToken(refreshToken);
+        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME);
     }
 
-    public TokenResponse tokenRefresh(TokenRequest request) throws Exception {
-        if(!tokenProvider.validateToken(request.getRefreshToken()))
+    public TokenResponse tokenRefresh(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Cookie refreshTokenCookie = WebUtils.getCookie(request, REFRESH_TOKEN_COOKIE_NAME);
+        if(refreshTokenCookie==null)
+            throw new RuntimeException("토큰 정보가 존재하지 않습니다");
+        String refreshToken = refreshTokenCookie.getValue();
+        if(!tokenProvider.validateToken(refreshToken))
             throw new IllegalAccessException("Unexpected token");
-
-        RefreshToken refreshToken = refreshTokenService
-                .findByRefreshToken(request.getRefreshToken());
-
-        User user = refreshToken.getUser();
-
+        User user = refreshTokenService.findByRefreshToken(refreshToken).getUser();
         String accessToken = tokenProvider.createAccessToken(user, Duration.ofHours(2));
-        String newRefreshToken = refreshToken
-                        .update(tokenProvider.createRefreshToken(Duration.ofDays(1)))
-                        .getRefreshToken();
+        String newRefreshToken = refreshTokenService.createNewToken(user);
+        addRefreshTokenToCookie(request, response, newRefreshToken);
 
-        return new TokenResponse(accessToken, newRefreshToken, user.getRole().getKey());
+        return new TokenResponse(accessToken, user.getRole().getKey());
+    }
 
+    public User findById(String id) {
+        return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
@@ -89,4 +97,5 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 유저입니다"));
     }
+
 }

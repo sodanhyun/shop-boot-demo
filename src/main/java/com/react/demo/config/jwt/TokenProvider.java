@@ -1,4 +1,4 @@
-package com.react.demo.jwt;
+package com.react.demo.config.jwt;
 
 import com.react.demo.entity.User;
 import io.jsonwebtoken.Claims;
@@ -19,12 +19,12 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import static com.react.demo.constant.TokenConstant.AUTHORITIES_KEY;
+
 @RequiredArgsConstructor
 @Service
 @Slf4j
 public class TokenProvider {
-    private static final String AUTHORITIES_KEY = "auth";
-
     private final JwtProperties jwtProperties;
 
     public String createAccessToken(User user, Duration expiredAt) {

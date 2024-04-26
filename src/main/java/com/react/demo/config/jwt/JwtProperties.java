@@ -1,4 +1,4 @@
-package com.react.demo.jwt;
+package com.react.demo.config.jwt;
 
 import lombok.Getter;
 import lombok.Setter;
