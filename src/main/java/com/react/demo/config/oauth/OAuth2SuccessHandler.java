@@ -1,11 +1,13 @@
 package com.react.demo.config.oauth;
 
-import com.react.demo.constant.OAuthType;
+import com.react.demo.constant.SocialType;
 import com.react.demo.dto.TokenResponse;
 import com.react.demo.entity.User;
 import com.react.demo.config.jwt.TokenProvider;
+import com.react.demo.repository.UserRepository;
 import com.react.demo.service.RefreshTokenService;
 import com.react.demo.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +23,6 @@ import org.springframework.web.util.WebUtils;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import static com.react.demo.constant.TokenConstant.*;
 
@@ -42,9 +43,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                                         Authentication authentication) throws IOException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = oAuth2User.getAttributes();
-        OAuthType type = getOAuthType(Objects.requireNonNull(WebUtils.getCookie(request, TYPE)).getValue());
-        String email = getEmail(type, attributes);
-        User user = userService.findById(email);
+        SocialType type = getOAuthType(Objects.requireNonNull(WebUtils.getCookie(request, TYPE)).getValue());
+        String userId = getUserId(type, attributes);
+        User user = userService.findById(userId);
         String refreshToken = refreshTokenService.createNewToken(user);
         addRefreshTokenToCookie(request, response, refreshToken);
         String accessToken = tokenProvider.createAccessToken(user, ACCESS_TOKEN_DURATION);
@@ -59,21 +60,21 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
 
-    private OAuthType getOAuthType(String type) {
+    private SocialType getOAuthType(String type) {
         if(type.equals("kakao"))
-            return OAuthType.KAKAO;
+            return SocialType.KAKAO;
         if(type.equals("google"))
-            return OAuthType.GOOGLE;
+            return SocialType.GOOGLE;
         return null;
     }
 
-    private String getEmail(OAuthType type, Map<String, Object> attributes) {
-        if(type==OAuthType.GOOGLE) {
-            return (String) attributes.get("email");
+    private String getUserId(SocialType type, Map<String, Object> attributes) {
+        if(type== SocialType.GOOGLE) {
+            return attributes.get("email") + "_" + SocialType.GOOGLE.getKey();
 
-        }else if(type==OAuthType.KAKAO) {
+        }else if(type== SocialType.KAKAO) {
             if(attributes.get("kakao_account") instanceof Map<?, ?> kakaoAccount)
-                return (String) kakaoAccount.get("email");
+                return kakaoAccount.get("email") + "_" + SocialType.KAKAO.getKey();
         }
         return null;
     }

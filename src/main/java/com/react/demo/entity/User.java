@@ -1,12 +1,10 @@
 package com.react.demo.entity;
 
 import com.react.demo.constant.Role;
+import com.react.demo.constant.SocialType;
 import com.react.demo.dto.UserFormDto;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,13 +18,16 @@ import java.util.Collection;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class User implements UserDetails {
 
     @Id
     @Column(name="user_id")
     private String id;
 
-    @Column(unique = true)
+    @Column(nullable = false)
+    private String email;
+
     private String nickname;
 
     private String name;
@@ -39,12 +40,18 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private SocialType socialType;
+
     @Builder
-    public User(String id, String password, String nickname, Role role) {
-        this.id = id;
+    public User(String email, String password, String nickname, Role role, SocialType socialType) {
+        this.id = email + "_" + socialType.getKey();
+        this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.role = role;
+        this.socialType = socialType;
     }
 
     public User update(String nickname) {
@@ -54,12 +61,14 @@ public class User implements UserDetails {
 
     public static User createUser(UserFormDto dto, PasswordEncoder passwordEncoder) {
         User user = new User();
-        user.setId(dto.getId());
+        user.setId(dto.getEmail() + "_" + SocialType.OWN.getKey());
+        user.setEmail(dto.getEmail());
         user.setName(dto.getName());
         String password = passwordEncoder.encode(dto.getPassword());
         user.setPassword(password);
         user.setAddress(dto.getAddress());
         user.setRole(Role.USER);
+        user.setSocialType(SocialType.OWN);
         return user;
     }
 

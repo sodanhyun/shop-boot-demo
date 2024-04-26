@@ -2,19 +2,26 @@ server:
   port: 8080
 
 #Develop
+backDomain: "http://localhost:8080"
 frontDomain: "http://localhost:3000"
 dbDomain: "mysql://localhost:3306"
 dbName: "shop"
 dbUser: "root"
 dbPasswd: "1234"
+googleRedirectUri: ${backDomain}/login/oauth2/code/google
+kakaoRedirectUri: ${backDomain}/login/oauth2/code/kakao
 itemImgLocation: C:/shop/item
 uploadPath: file:///shop/
 
 #Deploy
-#frontDomain: "http://13.125.249.166"
-#dbDomain: "mysql://15.164.231.36:3306"
+#backDomain: "http://3.37.129.147"
+#frontDomain: "http://3.37.129.147"
+#dbDomain: "mysql://13.209.65.31:3306"
+#dbName: "shop"
 #dbUser: "shop"
 #dbPasswd: "1234"
+#googleRedirectUri: ${backDomain}/api/login/oauth2/code/google
+#kakaoRedirectUri: ${backDomain}/api/login/oauth2/code/kakao
 #itemImgLocation: /home/ec2-user/shop/item
 #uploadPath: file:///home/ec2-user/shop/
 
@@ -26,13 +33,40 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
         show_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
         default_batch_fetch_size: 100
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: 4f66eba022302136ac0b9c64e503c457
+            client-secret: 6JMtuxi3wOBJJehwu6MQiw94IpdXT1N7
+            redirect-uri: ${kakaoRedirectUri}
+            client-authentication-method: client_secret_post
+            authorization-grant-type: authorization_code
+            scope: profile_nickname, account_email
+            client-name: kakao
+          google:
+            client-id: 801204202081-b4v8dravllca4ng03dtof6ktcnjsiqpd.apps.googleusercontent.com
+            client-secret: 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
+            redirect-uri: ${googleRedirectUri}
+            scope:
+              - email
+              - profile
+            client-name: google
+        provider:
+          kakao:
+            authorization_uri: https://kauth.kakao.com/oauth/authorize
+            token_uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user_name_attribute: id
 
   servlet:
     multipart:

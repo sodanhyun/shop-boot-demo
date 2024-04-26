@@ -1,6 +1,7 @@
 package com.react.demo.config.oauth;
 
 import com.react.demo.constant.Role;
+import com.react.demo.constant.SocialType;
 import com.react.demo.entity.User;
 import com.react.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,9 +38,10 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
             User user = userRepository.findById(email)
                     .map(entity -> entity.update(name))
                     .orElse(User.builder()
-                            .id(email)
+                            .email(email)
                             .nickname(name)
                             .role(Role.USER)
+                            .socialType(SocialType.KAKAO)
                             .build());
             userRepository.save(user);
         }
@@ -52,9 +54,10 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
         User user = userRepository.findById(email)
                 .map(entity -> entity.update(name))
                 .orElse(User.builder()
-                        .id(email)
+                        .email(email)
                         .nickname(name)
                         .role(Role.USER)
+                        .socialType(SocialType.GOOGLE)
                         .build());
         userRepository.save(user);
     }

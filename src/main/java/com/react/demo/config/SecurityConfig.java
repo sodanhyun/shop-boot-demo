@@ -7,6 +7,7 @@ import com.react.demo.config.oauth.OAuth2SuccessHandler;
 import com.react.demo.config.oauth.OAuth2UserCustomService;
 import com.react.demo.config.jwt.JwtFilter;
 import com.react.demo.config.jwt.TokenProvider;
+import com.react.demo.repository.UserRepository;
 import com.react.demo.service.RefreshTokenService;
 import com.react.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -102,6 +105,11 @@ public class SecurityConfig {
                 refreshTokenService,
                 oAuth2AuthorizationRequestBasedOnCookieRepository(),
                 userService);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean

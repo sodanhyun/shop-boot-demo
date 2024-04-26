@@ -38,7 +38,6 @@ public class UserService implements UserDetailsService {
     private final RefreshTokenService refreshTokenService;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public boolean validateUser(UserFormDto dto) {
         return userRepository.findById(dto.getId()).orElse(null) == null;
@@ -46,6 +45,7 @@ public class UserService implements UserDetailsService {
 
     public void signUp(UserFormDto dto) {
         if(!validateUser(dto)) throw new RuntimeException("이미 존재하는 아이디 입니다");
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         User saveUser = User.createUser(dto, passwordEncoder);
         userRepository.save(saveUser);
     }

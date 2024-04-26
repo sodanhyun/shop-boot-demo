@@ -1,10 +1,12 @@
 package com.react.demo.config.jwt;
 
 import com.react.demo.entity.User;
+import com.react.demo.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +28,7 @@ import static com.react.demo.constant.TokenConstant.AUTHORITIES_KEY;
 @Slf4j
 public class TokenProvider {
     private final JwtProperties jwtProperties;
+    private final UserRepository userRepository;
 
     public String createAccessToken(User user, Duration expiredAt) {
         Date now = new Date();
@@ -81,19 +84,14 @@ public class TokenProvider {
             throw new RuntimeException("권한 정보가 없는 토큰입니다");
         }
 
-        String userId = claims.getSubject();
+        User user = userRepository.findById(claims.getSubject())
+                .orElseThrow(EntityNotFoundException::new);
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        return new UsernamePasswordAuthenticationToken(
-                new org.springframework.security.core.userdetails.User(
-                        userId, "", authorities
-                ),
-                token,
-                authorities
-        );
+        return new UsernamePasswordAuthenticationToken(user, token, authorities);
     }
 
 }
