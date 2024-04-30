@@ -67,7 +67,7 @@ public class User implements UserDetails {
         String password = passwordEncoder.encode(dto.getPassword());
         user.setPassword(password);
         user.setAddress(dto.getAddress());
-        user.setRole(Role.USER);
+        user.setRole(Role.ADMIN);
         user.setSocialType(SocialType.OWN);
         return user;
     }

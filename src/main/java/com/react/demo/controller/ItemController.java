@@ -29,16 +29,15 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping(value = "/admin/item/new")
-    public ResponseEntity<String> itemNew(@Valid @RequestPart("data") ItemFormDto itemFormDto,
+    public ResponseEntity<String> itemNew(@Valid @RequestPart("itemFormDto") ItemFormDto itemFormDto,
                                           BindingResult bindingResult,
-                                          @RequestPart(value = "itemImgFile", required = false)
-                                              List<MultipartFile> itemImgFileList){
+                                          List<MultipartFile> itemImgFiles){
         if(bindingResult.hasErrors()) return getStringResponseEntity(bindingResult);
-        if(itemImgFileList==null || itemImgFileList.get(0).isEmpty()){
+        if(itemImgFiles==null || itemImgFiles.get(0).isEmpty()){
             return new ResponseEntity<>("첫번째 상품 이미지는 필수 입력 값 입니다.", HttpStatus.BAD_REQUEST);
         }
         try {
-            itemService.saveItem(itemFormDto, itemImgFileList);
+            itemService.saveItem(itemFormDto, itemImgFiles);
         } catch (Exception e){
             return new ResponseEntity<>("상품 등록 중 에러가 발생하였습니다.", HttpStatus.BAD_REQUEST);
         }
@@ -46,13 +45,12 @@ public class ItemController {
     }
 
     @PatchMapping(value = "/admin/item")
-    public ResponseEntity<String> itemUpdate(@Valid @RequestPart("data") ItemFormDto itemFormDto,
+    public ResponseEntity<String> itemUpdate(@Valid @RequestPart("itemFormDto") ItemFormDto itemFormDto,
                                              BindingResult bindingResult,
-                                             @RequestPart(value = "itemImgFile", required = false)
-                                                 List<MultipartFile> itemImgFileList){
+                                             List<MultipartFile> itemImgFiles){
         if(bindingResult.hasErrors()) return ValidUtil.getStringResponseEntity(bindingResult);
         try {
-            itemService.updateItem(itemFormDto, itemImgFileList);
+            itemService.updateItem(itemFormDto, itemImgFiles);
         } catch (Exception e){
             return new ResponseEntity<>("상품 수정 중 에러가 발생하였습니다.", HttpStatus.BAD_REQUEST);
         }
@@ -61,7 +59,7 @@ public class ItemController {
 
     @PostMapping(value = {"/admin/items", "/admin/items/{page}"})
     public ResponseEntity<PageDto<Item>> itemManage(@RequestBody ItemSearchDto itemSearchDto,
-                                        @PathVariable("page") Optional<Integer> page){
+                                                    @PathVariable("page") Optional<Integer> page){
         Pageable pageable = PageRequest.of(page.orElse(0), 3);
         Page<Item> items = itemService.getAdminItemPage(itemSearchDto, pageable);
         return new ResponseEntity<>(new PageDto<>(items, 5), HttpStatus.OK);
