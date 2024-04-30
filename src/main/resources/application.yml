@@ -1,39 +1,31 @@
 server:
   port: 8080
 
-#Develop
-backDomain: "http://localhost:8080"
-frontDomain: "http://localhost:3000"
-dbDomain: "mysql://localhost:3306"
-dbName: "shop"
-dbUser: "root"
-dbPasswd: "1234"
-googleRedirectUri: ${backDomain}/login/oauth2/code/google
-kakaoRedirectUri: ${backDomain}/login/oauth2/code/kakao
-itemImgLocation: C:/shop/item
-uploadPath: file:///shop/
+ddlAuto : ${init.ddlAuto:validate}
+database: ${init.database:mysql}
+dbName: ${init.dbName:shop}
+dbPort: ${init.dbPort:3306}
 
-#Deploy
-#backDomain: "http://3.37.129.147"
-#frontDomain: "http://3.37.129.147"
-#dbDomain: "mysql://13.209.65.31:3306"
-#dbName: "shop"
-#dbUser: "shop"
-#dbPasswd: "1234"
-#googleRedirectUri: ${backDomain}/api/login/oauth2/code/google
-#kakaoRedirectUri: ${backDomain}/api/login/oauth2/code/kakao
-#itemImgLocation: /home/ec2-user/shop/item
-#uploadPath: file:///home/ec2-user/shop/
+host: ${init.host:http://localhost:}
+dbDomain: ${init.dbDomain:localhost}
+
+#essential
+# java -jar -Dspring.profiles.active=[dev or prod] [jarFile].jar
+# --init.[options]=[value] . . .
+dbUser: ${init.dbUser:root}
+dbPasswd: ${init.dbPasswd:1234}
+jwtSecret : ${init.jwtSecret:1qw2#ER$}
+
 
 spring:
   datasource:
-    url: jdbc:${dbDomain}/${dbName}?useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul
+    url: jdbc:${database}://${dbDomain}:${dbPort}/${dbName}?useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul
     username: ${dbUser}
     password: ${dbPasswd}
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${ddlAuto}
     properties:
       hibernate:
         format_sql: true
@@ -76,7 +68,7 @@ spring:
 
 jwt:
   isuuer: reactdemo
-  secret-key: jwtSecretKey
+  secret-key: ${jwtSecret}
 
 logging:
   level:

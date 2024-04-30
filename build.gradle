@@ -46,6 +46,10 @@ dependencies {
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
 	implementation 'org.modelmapper:modelmapper:2.4.2'
+
+	// https://mvnrepository.com/artifact/com.beust/jcommander
+	implementation group: 'com.beust', name: 'jcommander', version: '1.48'
+
 }
 
 tasks.named('test') {

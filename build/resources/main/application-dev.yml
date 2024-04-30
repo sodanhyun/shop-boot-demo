@@ -1,0 +1,12 @@
+#Develop
+itemImgLocation: C:/shop/item
+uploadPath: file:///shop/
+backDomain: ${host}8080
+frontDomain: ${host}3000
+googleRedirectUri: ${backDomain}/login/oauth2/code/google
+kakaoRedirectUri: ${backDomain}/login/oauth2/code/kakao
+
+spring:
+  config:
+    activate:
+      on-profile: dev

@@ -1,0 +1,12 @@
+#Deploy
+itemImgLocation: /home/ec2-user/shop/item
+uploadPath: file:///home/ec2-user/shop/
+backDomain: ${host}
+frontDomain: ${host}
+googleRedirectUri: ${backDomain}/api/login/oauth2/code/google
+kakaoRedirectUri: ${backDomain}/api/login/oauth2/code/kakao
+
+spring:
+  config:
+    activate:
+      on-profile: prod
