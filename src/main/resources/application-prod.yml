@@ -1,4 +1,4 @@
-#Deploy jenkins
+#Deploy jenkins!
 itemImgLocation: /home/ec2-user/shop/item
 uploadPath: file:///home/ec2-user/shop/
 backDomain: ${host}
