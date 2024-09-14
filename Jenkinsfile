@@ -38,7 +38,7 @@ pipeline {
 
                 dir('.') {
                     sh """
-                    ./gradlew clean build
+                    ./gradlew clean bootjar
                     """
                 }
             }
