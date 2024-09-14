@@ -10,7 +10,7 @@ kakaoRedirectUri: ${backDomain}/api/login/oauth2/code/kakao
 server:
   port: 8080
 
-ddlAuto : ${init.ddlAuto:create}
+ddlAuto : ${init.ddlAuto:validate}
 database: ${init.database:mysql}
 dbName: ${init.dbName:shop}
 dbPort: ${init.dbPort:3306}
