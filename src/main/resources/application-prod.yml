@@ -1,4 +1,10 @@
 #Deploy jenkins!!!
+ddlAuto : ${init.ddlAuto:validate}
+database: ${init.database:mysql}
+dbName: ${init.dbName:shop}
+dbPort: ${init.dbPort:3306}
+host: ${init.host:https://www.whisperquestion.com:}
+dbDomain: ${init.dbDomain:172.17.0.1}
 itemImgLocation: /home/ubuntu/shop/item
 uploadPath: file:///home/ubuntu/shop/
 backDomain: ${host}
@@ -9,14 +15,6 @@ kakaoRedirectUri: ${backDomain}/api/login/oauth2/code/kakao
 
 server:
   port: 8080
-
-ddlAuto : ${init.ddlAuto:validate}
-database: ${init.database:mysql}
-dbName: ${init.dbName:shop}
-dbPort: ${init.dbPort:3306}
-
-host: ${init.host:https://whisperquestion.com:}
-dbDomain: ${init.dbDomain:172.17.0.1}
 
 #essential
 # java -jar -Dspring.profiles.active=[dev or prod] [jarFile].jar
