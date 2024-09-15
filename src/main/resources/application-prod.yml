@@ -2,9 +2,9 @@
 ddlAuto : ${init.ddlAuto:create}
 database: ${init.database:mysql}
 dbName: ${init.dbName:shop}
-dbPort: ${init.dbPort:3306}
+dbPort: ${init.dbPort:3382}
 host: ${init.host:https://www.whisperquestion.com:}
-dbDomain: ${init.dbDomain:mariadb_1}
+dbDomain: ${init.dbDomain:222.119.100.89}
 itemImgLocation: /home/ubuntu/shop/item
 uploadPath: file:///home/ubuntu/shop/
 backDomain: ${host}
