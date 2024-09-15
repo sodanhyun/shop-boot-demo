@@ -125,7 +125,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.addAllowedOrigin(frontDomain);
+        config.addAllowedOrigin("https://www.whisperquestion.com");
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
         config.setMaxAge(86400L);
