@@ -1,4 +1,4 @@
-#Deploy jenkins!!!
+#Deploy jenkins!!!final
 ddlAuto : ${init.ddlAuto:create}
 host: ${init.host:https://www.whisperquestion.com:}
 itemImgLocation: /home/ubuntu/shop/item
