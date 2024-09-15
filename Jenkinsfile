@@ -79,6 +79,7 @@ pipeline {
                           -p 8080:8080 \
                           -v /docker_projects/shop-boot-demo/volumes/gen:/gen \
                           --restart unless-stopped \
+                          --network application \
                           -e TZ=Asia/Seoul \
                           -d \
                           shop-boot-demo:${timestamp}
