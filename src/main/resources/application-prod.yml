@@ -24,7 +24,7 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:mysql://mariadb_1:3306/shop?useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul
+    url: jdbc:mariadb://mariadb_1:3306/shop?useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Seoul
     username: ${dbUser}
     password: ${dbPasswd}
 
