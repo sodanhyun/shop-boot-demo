@@ -4,7 +4,7 @@ database: ${init.database:mysql}
 dbName: ${init.dbName:shop}
 dbPort: ${init.dbPort:3306}
 host: ${init.host:https://www.whisperquestion.com:}
-dbDomain: ${init.dbDomain:172.17.0.1}
+dbDomain: ${init.dbDomain:mariadb_1}
 itemImgLocation: /home/ubuntu/shop/item
 uploadPath: file:///home/ubuntu/shop/
 backDomain: ${host}
