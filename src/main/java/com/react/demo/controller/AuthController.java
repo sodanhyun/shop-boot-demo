@@ -22,6 +22,11 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final UserService userService;
 
+    @GetMapping("test")
+    public String test() {
+        return "nice test";
+    }
+
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@Valid @RequestBody UserFormDto dto,
                                          BindingResult bindingResult) {
