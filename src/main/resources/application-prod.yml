@@ -15,8 +15,8 @@ server:
 #essential
 # java -jar -Dspring.profiles.active=[dev or prod] [jarFile].jar
 # --init.[options]=[value] . . .
-dbUser: ${init.dbUser:root}
-dbPasswd: ${init.dbPasswd:1qw2#ER$%T}
+dbUser: ${init.dbUser:shop}
+dbPasswd: ${init.dbPasswd:1234}
 jwtSecret : ${init.jwtSecret:1qw2#ER$}
 
 spring:
