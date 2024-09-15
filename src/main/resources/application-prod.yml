@@ -1,5 +1,5 @@
 #Deploy jenkins!!!
-ddlAuto : ${init.ddlAuto:validate}
+ddlAuto : ${init.ddlAuto:create}
 database: ${init.database:mysql}
 dbName: ${init.dbName:shop}
 dbPort: ${init.dbPort:3306}
